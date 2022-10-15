@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  api:
+    container_name: "rateservice"
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/go/src/github.com/mannanmcc/rateservice
+    ports:
+      - 9001:9001
+    tty: true
+    restart: on-failure
