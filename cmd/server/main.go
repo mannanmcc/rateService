@@ -8,14 +8,17 @@ import (
 	"log"
 
 	protos "github.com/mannanmcc/proto/rates/rate"
+	"github.com/mannanmcc/rateService/internal/adapter/currency"
 	rateservice "github.com/mannanmcc/rateService/internal/rateservice"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	fmt.Println("launce grpc application")
-	rateService := rateservice.New()
+	currencyProvider := currency.New("https://api.exchangerate.host/latest")
+	rateService := rateservice.New(currencyProvider)
 	grpcServer := grpc.NewServer()
+
 	//register the rateservice server
 	protos.RegisterRateServiceServer(grpcServer, rateService)
 
