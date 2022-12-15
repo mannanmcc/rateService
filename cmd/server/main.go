@@ -8,6 +8,7 @@ import (
 	"log"
 
 	protos "github.com/mannanmcc/proto/rates/rate"
+	"github.com/mannanmcc/rateService/config"
 	"github.com/mannanmcc/rateService/internal/adapter/currency"
 	rateservice "github.com/mannanmcc/rateService/internal/rateservice"
 	"google.golang.org/grpc"
@@ -15,7 +16,12 @@ import (
 
 func main() {
 	fmt.Println("launce grpc application")
-	currencyProvider := currency.New("https://api.exchangerate.host/latest")
+	cfg, err := config.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	currencyProvider := currency.New(cfg.CurrencyAPIUrl)
 	rateService := rateservice.New(currencyProvider)
 	grpcServer := grpc.NewServer()
 
