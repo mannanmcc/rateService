@@ -48,7 +48,7 @@ func (cp CurrencyProvider) GetRate(base string) (map[string]float32, error) {
 
 	res, getErr := spaceClient.Do(req)
 	if getErr != nil {
-		log.Fatal(getErr)
+		log.Println("failed to get rate from api")
 		return nil, getErr
 	}
 

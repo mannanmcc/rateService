@@ -12,6 +12,12 @@ mod:
 build-docker:
 	docker build --no-cache -t ${IMAGE_TAG} -t github.com/mannanmcc/rateservice .
 
+
+start-app: build-docker
+	IMAGE=${IMAGE_TAG} docker-compose -f ./docker-compose.yml down --rmi local
+	IMAGE=${IMAGE_TAG} docker-compose -f ./docker-compose.yml up --build -d --force-recreate
+
+
 stop-bdd-docker:
 	IMAGE=${IMAGE_TAG} docker-compose -f ./test/docker-compose.yml down
 
