@@ -29,7 +29,7 @@ func newBasicClient() (*grpc.ClientConn, error) {
 
 var (
 	client     protos.RateServiceClient
-	serverAddr = flag.String("addr", "localhost:9001", "The server address in the format of host:port")
+	serverAddr = flag.String("addr", "api:50051", "The server address in the format of host:port")
 )
 
 var _ = BeforeSuite(func() {
@@ -42,11 +42,17 @@ func TestCurrency(t *testing.T) {
 	RunSpecs(t, "Shopping Cart Suite")
 }
 
+const (
+	currencyGBP  = "GBP"
+	currencyEURO = "EUR"
+)
+
 var _ = Describe("Shopping cart", func() {
+
 	When("A valid rpc request received", func() {
 		It("should return rate", func() {
-			expoectedRate := "1.1"
-			rate, err := client.GetRate(context.Background(), &protos.RateRequest{BaseCurrency: "GBP", TargetCurrency: "GBP"})
+			expoectedRate := "1.10"
+			rate, err := client.GetRate(context.Background(), &protos.RateRequest{BaseCurrency: currencyGBP, TargetCurrency: currencyEURO})
 			Expect(err).To(BeNil())
 			Expect(rate.GetRate()).To(Equal(expoectedRate))
 		})

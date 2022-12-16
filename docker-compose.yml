@@ -12,3 +12,5 @@ services:
       - 9001:9001
     tty: true
     restart: on-failure
+    environment:
+      - CONFIG_FILE=config.yaml

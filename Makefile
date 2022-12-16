@@ -3,6 +3,9 @@
 PROJECT?=rateservice
 IMAGE_TAG?=github.com/mannanmcc/rateservice
 
+test:
+	go test -vet all ./...
+
 mod:
 	go mod vendor
 
@@ -17,4 +20,4 @@ start-bdd-docker: build-docker
 	IMAGE=${IMAGE_TAG} docker-compose -f ./test/docker-compose.yml up --build -d --force-recreate
 
 run-bdd-tests:
-	IMAGE=${IMAGE_TAG} docker-compose -f ./test/docker-compose.yml exec -T tests ginkgo -mod vendor -r --randomize-all --trace ./test/...
+	IMAGE=${IMAGE_TAG} docker-compose -f ./test/docker-compose.yml exec -T test ginkgo -mod vendor -r --trace ./test/...

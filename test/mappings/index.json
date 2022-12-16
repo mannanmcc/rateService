@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/latest\\?base=gbp"
+    },
+    "response": {
+        "status": 200,
+        "body": "{ \"test\": \"data\", \"rates\":{\"EUR\":1.10}, \"base\":\"GBP\"}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

@@ -28,9 +28,9 @@ func main() {
 	//register the rateservice server
 	protos.RegisterRateServiceServer(grpcServer, rateService)
 
-	lis, err := net.Listen("tcp", ":9001")
+	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		log.Fatal("Unavle to listen on port:", "9001")
+		log.Fatal("Unavle to listen on port:", "50051")
 		os.Exit(1)
 	}
 

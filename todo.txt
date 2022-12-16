@@ -1,0 +1,9 @@
+* Add container for wiremock to mock remote api call (rest GET api)
+    Follow this page: https://www.alexhyett.com/mock-api-calls-wiremock/
+
+* Clean up a bit on the bdd test suite setup such as move few things to the test_setuo.go file
+* clean up the adapter package that communicate remote currency api to get the rate
+* introduce mongo or caching to store the rate for 24 hours
+* Get the BDD test running from MAKE COMMAND
+* Add config.go and store config such as base url for currency api, timeout to the config file
+* Add another GRPC service as dependencies and setup proxy for that service mocking for BDD test

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func (cp CurrencyProvider) GetRate(base string) (map[string]float32, error) {
 	}
 	url := cp.url
 	if base != "" {
-		url = url + "?base=" + base
+		url = url + "?base=" + strings.ToLower(base)
 	}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)

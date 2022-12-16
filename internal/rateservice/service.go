@@ -56,5 +56,5 @@ func (s *Service) GetRate(ctx context.Context, req *protos.RateRequest) (*protos
 	// 	return nil, currencyNotSupported
 	// }
 
-	return &protos.RateResponse{Rate: fmt.Sprintf("%f", rateFromApi)}, nil
+	return &protos.RateResponse{Rate: fmt.Sprintf("%.2f", rateFromApi)}, nil
 }
