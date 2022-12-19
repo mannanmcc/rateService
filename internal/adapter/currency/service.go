@@ -14,7 +14,8 @@ import (
 )
 
 type CurrencyProvider struct {
-	url string
+	url               string
+	connectionTimeOut time.Duration
 }
 
 type APIRequest struct {
@@ -24,9 +25,10 @@ type APIRequest struct {
 	Rates   map[string]float32 `json:"rates"`
 }
 
-func New(url string) CurrencyProvider {
+func New(url string, connectionTimeOut time.Duration) CurrencyProvider {
 	return CurrencyProvider{
-		url: url,
+		url:               url,
+		connectionTimeOut: connectionTimeOut,
 	}
 }
 
@@ -37,7 +39,7 @@ func (cp CurrencyProvider) GetRate(ctx context.Context, base string) (map[string
 
 	spaceClient := &http.Client{
 		Transport: tr,
-		Timeout:   time.Second * 2, // Timeout after 2 seconds
+		Timeout:   time.Second * cp.connectionTimeOut,
 	}
 	url := cp.url
 	if base != "" {

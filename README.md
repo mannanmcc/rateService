@@ -26,3 +26,6 @@ and finally to keep the path
 echo 'export PATH="/usr/local/opt/go@1.18/bin:$PATH"' >> ~/.zshrc
 ```
 
+## Linter
+* Linter added based on this page, https://freshman.tech/linting-golang/
+

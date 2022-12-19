@@ -1,1 +1,2 @@
 currency_api_url: "https://api.exchangerate.host/latest"
+currency_api_connection_timeout: 2s

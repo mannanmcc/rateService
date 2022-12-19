@@ -4,12 +4,14 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
-	CurrencyAPIUrl string `yaml:"currency_api_url"`
+	CurrencyAPIUrl         string        `yaml:"currency_api_url"`
+	CurrencyAPIConnTimeout time.Duration `yaml:"currency_api_connection_timeout"`
 }
 
 const (

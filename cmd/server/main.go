@@ -1,16 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net"
 	"os"
 
-	"log"
-
 	"github.com/mannanmcc/rateService/config"
 	"github.com/mannanmcc/rateService/internal/adapter/currency"
+	"github.com/mannanmcc/rateService/internal/logger"
 	rateservice "github.com/mannanmcc/rateService/internal/rateservice"
 	v1 "github.com/mannanmcc/rateService/internal/transport/grpc/v1"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
@@ -21,7 +23,7 @@ func main() {
 		panic(err)
 	}
 
-	currencyProvider := currency.New(cfg.CurrencyAPIUrl)
+	currencyProvider := currency.New(cfg.CurrencyAPIUrl, cfg.CurrencyAPIConnTimeout)
 	rateService := rateservice.New(currencyProvider)
 	grpcServer := grpc.NewServer()
 
@@ -35,5 +37,8 @@ func main() {
 	}
 
 	//start the grpc server
-	grpcServer.Serve(lis)
+	if err := grpcServer.Serve(lis); err != nil {
+		logger.Error(context.Background(), "failed to serve grpc server", zap.Error(err))
+	}
+
 }
