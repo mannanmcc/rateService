@@ -7,10 +7,10 @@ import (
 
 	"log"
 
-	protos "github.com/mannanmcc/proto/rates/rate"
 	"github.com/mannanmcc/rateService/config"
 	"github.com/mannanmcc/rateService/internal/adapter/currency"
 	rateservice "github.com/mannanmcc/rateService/internal/rateservice"
+	v1 "github.com/mannanmcc/rateService/internal/transport/grpc/v1"
 	"google.golang.org/grpc"
 )
 
@@ -25,8 +25,8 @@ func main() {
 	rateService := rateservice.New(currencyProvider)
 	grpcServer := grpc.NewServer()
 
-	//register the rateservice server
-	protos.RegisterRateServiceServer(grpcServer, rateService)
+	handler := v1.New(rateService)
+	handler.Register(grpcServer)
 
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {

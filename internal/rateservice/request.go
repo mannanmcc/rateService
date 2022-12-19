@@ -1,6 +1,10 @@
 package rateservice
 
 type Request struct {
-	baseCurrency   string
-	targetCurrency string
+	BaseCurrency   string
+	TargetCurrency string
+}
+
+type Response struct {
+	Rate float32
 }

@@ -1,0 +1,9 @@
+- [&check;] Add container for wiremock to mock remote api call (rest GET api)
+    Follow this page: https://www.alexhyett.com/mock-api-calls-wiremock/
+
+- [&cross;] Clean up a bit on the bdd test suite setup such as move few things to the test_setuo.go file
+- [&cross;] introduce mongo or caching to store the rate for 24 hours
+- [&cross;] Add timeout for the remote api call
+- [&cross;] Add another GRPC service as dependencies and setup proxy for that service mocking for BDD test
+- [&cross;] add zap logger with context to log - 
+- [&check;] Add transport layer and call handler from TL

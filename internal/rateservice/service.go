@@ -2,7 +2,6 @@ package rateservice
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -18,9 +17,9 @@ type Service struct {
 
 var supportedCurrencies = []string{"USD", "EUR", "GBP", "BDT"}
 
-const invalidRequest = errors.Error("invalid request")
-const apiCallFailedErr = errors.Error("failed to retrieve rate fro remote api")
-const currencyNotSupported = errors.Error("un supported currency provided")
+const ErrInvalidRequest = errors.Error("invalid request")
+const ErrApiCallFailed = errors.Error("failed to retrieve rate fro remote api")
+const ErrCurrencyNotSupported = errors.Error("un supported currency provided")
 const errFailedToGetCurrency = errors.Error("Failed to get currency")
 
 func New(provider currency.CurrencyProvider) *Service {
@@ -29,33 +28,29 @@ func New(provider currency.CurrencyProvider) *Service {
 	}
 }
 
-func (s *Service) GetRate(ctx context.Context, req *protos.RateRequest) (*protos.RateResponse, error) {
-	if req.GetBaseCurrency() == "" || req.GetTargetCurrency() == "" {
-		return nil, invalidRequest
-	}
+func (s *Service) GetRate(ctx context.Context, req Request) (Response, error) {
 
+	response := Response{}
 	var err error
 	var rates map[string]float32
 
-	currencyForRate := strings.ToUpper(req.GetTargetCurrency())
-
-	if !isCurrenctSupported(currencyForRate) {
-		return nil, currencyNotSupported
+	if !isCurrencySupported(strings.ToUpper(req.TargetCurrency)) {
+		return response, ErrCurrencyNotSupported
 	}
 
-	if rates, err = s.currencyProvider.GetRate(req.GetBaseCurrency()); err != nil {
-		log.Fatal(err)
-		return nil, apiCallFailedErr
+	if rates, err = s.currencyProvider.GetRate(req.BaseCurrency); err != nil {
+		log.Println("failed to retrieve rate from remote rate provide")
+		return response, ErrApiCallFailed
 	}
 
-	if rateFromApi, ok := rates[strings.ToUpper(req.GetTargetCurrency())]; ok {
-		return &protos.RateResponse{Rate: fmt.Sprintf("%.2f", rateFromApi)}, nil
+	if rateFromApi, ok := rates[strings.ToUpper(req.TargetCurrency)]; ok {
+		return Response{Rate: rateFromApi}, nil
 	}
 
-	return nil, errFailedToGetCurrency
+	return response, errFailedToGetCurrency
 }
 
-func isCurrenctSupported(curr string) bool {
+func isCurrencySupported(curr string) bool {
 	for _, currency := range supportedCurrencies {
 		if currency == curr {
 			return true
