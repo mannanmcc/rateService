@@ -34,13 +34,17 @@ func (s *Service) GetRate(ctx context.Context, req Request) (Response, error) {
 	var err error
 	var rates map[string]float32
 
+	if err := req.validate(); err != nil {
+		return response, ErrInvalidRequest.Wrap(err)
+	}
+
 	if !isCurrencySupported(strings.ToUpper(req.TargetCurrency)) {
 		return response, ErrCurrencyNotSupported
 	}
 
 	if rates, err = s.currencyProvider.GetRate(req.BaseCurrency); err != nil {
 		log.Println("failed to retrieve rate from remote rate provide")
-		return response, ErrApiCallFailed
+		return response, ErrApiCallFailed.Wrap(err)
 	}
 
 	if rateFromApi, ok := rates[strings.ToUpper(req.TargetCurrency)]; ok {
