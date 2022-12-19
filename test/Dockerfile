@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.16-alpine as build
+FROM golang:1.18-alpine as build
 
 #Project path
 ENV PACKAGENAME 'rateservice'
@@ -11,7 +11,6 @@ ENV GOPATH /go
 ENV GOPROJECT ${GOPATH}/src/${PACKAGE}
 
 WORKDIR ${GOPROJECT}
-
 
 ADD . .
 

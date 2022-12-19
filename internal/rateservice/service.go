@@ -2,7 +2,6 @@ package rateservice
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	protos "github.com/mannanmcc/proto/rates/rate"
@@ -35,6 +34,7 @@ func (s *Service) GetRate(ctx context.Context, req Request) (Response, error) {
 	var rates map[string]float32
 
 	if err := req.validate(); err != nil {
+
 		return response, ErrInvalidRequest.Wrap(err)
 	}
 
@@ -42,8 +42,7 @@ func (s *Service) GetRate(ctx context.Context, req Request) (Response, error) {
 		return response, ErrCurrencyNotSupported
 	}
 
-	if rates, err = s.currencyProvider.GetRate(req.BaseCurrency); err != nil {
-		log.Println("failed to retrieve rate from remote rate provide")
+	if rates, err = s.currencyProvider.GetRate(ctx, req.BaseCurrency); err != nil {
 		return response, ErrApiCallFailed.Wrap(err)
 	}
 

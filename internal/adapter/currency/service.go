@@ -1,13 +1,16 @@
 package currency
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/mannanmcc/rateService/internal/logger"
+	"go.uber.org/zap"
 )
 
 type CurrencyProvider struct {
@@ -27,7 +30,7 @@ func New(url string) CurrencyProvider {
 	}
 }
 
-func (cp CurrencyProvider) GetRate(base string) (map[string]float32, error) {
+func (cp CurrencyProvider) GetRate(ctx context.Context, base string) (map[string]float32, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -43,12 +46,12 @@ func (cp CurrencyProvider) GetRate(base string) (map[string]float32, error) {
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error(ctx, "failed to initialize http request", zap.Error(err))
 	}
 
 	res, getErr := spaceClient.Do(req)
 	if getErr != nil {
-		log.Println("failed to get rate from api")
+		logger.Print(ctx, "failed to get rate from remote rate service", zap.Error(getErr))
 		return nil, getErr
 	}
 
@@ -58,14 +61,15 @@ func (cp CurrencyProvider) GetRate(base string) (map[string]float32, error) {
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		log.Fatal(readErr)
+		logger.Print(ctx, "could not read  response payload", zap.Error(getErr))
 		return nil, getErr
 	}
 
 	reqFormat := APIRequest{}
 	jsonErr := json.Unmarshal(body, &reqFormat)
 	if jsonErr != nil {
-		log.Fatal(jsonErr)
+		logger.Print(ctx, "could not unmarshall response payload", zap.Error(jsonErr))
 	}
+
 	return reqFormat.Rates, nil
 }

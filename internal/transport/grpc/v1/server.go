@@ -5,10 +5,12 @@ import (
 	"errors"
 
 	protos "github.com/mannanmcc/proto/rates/rate"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/mannanmcc/rateService/internal/logger"
 	"github.com/mannanmcc/rateService/internal/rateservice"
 )
 
@@ -32,6 +34,7 @@ func (h *Handler) GetRate(ctx context.Context, req *protos.RateRequest) (*protos
 	response, err := h.service.GetRate(ctx, transformRequest(req))
 	if err != nil {
 		if errors.Is(err, rateservice.ErrInvalidRequest) {
+			logger.Print(ctx, "invalid request", zap.Error(err))
 			return transformResponse(response), status.Error(codes.InvalidArgument, err.Error())
 		}
 
