@@ -15,11 +15,14 @@ func newBasicClient() (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	conn, err := grpc.Dial(*serverAddr, opts...)
+
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 		return nil, err
 	}
-	//defer conn.Close()
+
+	defer conn.Close()
+
 	return conn, nil
 }
 

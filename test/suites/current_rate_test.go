@@ -18,7 +18,6 @@ func TestCurrency(t *testing.T) {
 const (
 	currencyGBP  = "GBP"
 	currencyEURO = "EUR"
-	currencyBDT  = "BDT"
 )
 
 var _ = Describe("Shopping cart", func() {

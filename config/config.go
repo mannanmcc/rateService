@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -21,13 +20,14 @@ const (
 
 func Load() (Config, error) {
 	var cfg Config
+
 	configFilePath, exists := os.LookupEnv(configFilePathEnv)
 	if !exists {
 		configFilePath = defaultFilePathEnv
 	}
 
 	filename, _ := filepath.Abs(configFilePath)
-	yamlFile, err := ioutil.ReadFile(filename)
+	yamlFile, err := os.ReadFile(filename)
 
 	if err != nil {
 		return cfg, err

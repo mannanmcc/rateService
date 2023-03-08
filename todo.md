@@ -10,3 +10,9 @@
 - [&check;] Add transport layer and call handler from TL
 - [&cross;] Add linter configuration
 - [&cross;] Add interface to log the request and response of the api
+- [&cross;] Check how to use dependancy injection provider instead of putting everything manually in main.go file
+- [&cross;] Read about secure code in golang, https://securego.io/docs/rules/g102.html
+
+
+Reading:
+- https://slscan.io/en/latest/secure-development/go/
