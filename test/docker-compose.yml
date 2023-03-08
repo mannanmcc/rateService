@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  test:
+    container_name: "rateservice-test"
+    build:
+      dockerfile: test/Dockerfile
+      context: ../.
+    volumes:
+      - ../.:/go/src/github.com/mannanmcc/rateservice
+    tty: true
+    restart: on-failure
+    environment:
+      CGO_ENABLED: 0
+    depends_on:
+      - api
+    ports:
+      - "52051:52051"
+
+  api:
+    container_name: "rateservice-api"
+    build:
+      context: ../.
+    volumes:
+      - ../.:/go/src/github.com/mannanmcc/rateservice
+    ports:
+      - 50051:50051
+    tty: true
+    restart: on-failure
+    environment:
+      CONFIG_FILE: "/go/src/github.com/mannanmcc/rateservice/test/config.yml"
+    depends_on:
+      - mockserver
+  
+  mockserver:
+    image: rodolpheche/wiremock
+    container_name: wiremock
+    volumes:
+      - ./ __files:/home/wiremock/__ files
+      - ./mappings:/home/wiremock/mappings
+    ports:
+      - 8080:8080

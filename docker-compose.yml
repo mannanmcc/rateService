@@ -9,6 +9,9 @@ services:
     volumes:
       - .:/go/src/github.com/mannanmcc/rateservice
     ports:
-      - 9001:9001
+      - 50051:50051
     tty: true
     restart: on-failure
+    environment:
+      CONFIG_FILE: "/go/src/github.com/mannanmcc/rateservice/config.yaml"
+     

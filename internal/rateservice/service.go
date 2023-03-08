@@ -2,43 +2,62 @@ package rateservice
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	protos "github.com/mannanmcc/proto/rates/rate"
+	currency "github.com/mannanmcc/rateService/internal/adapter/currency"
 	errors "github.com/mannanmcc/rateService/internal/errors"
 )
 
 type Service struct {
 	protos.UnimplementedRateServiceServer
+	currencyProvider currency.Provider
 }
 
-var currentRate = map[string]string{
-	"gbp-gbp": "1",
-	"gbp-usd": "1.1",
-	"usd-gbp": "0.9",
-	"usd-usd": "1",
+var supportedCurrencies = []string{"USD", "EUR", "GBP", "BDT"}
+
+const ErrInvalidRequest = errors.Error("invalid request")
+const ErrAPICallFailed = errors.Error("failed to retrieve rate fro remote api")
+const ErrCurrencyNotSupported = errors.Error("un supported currency provided")
+const errFailedToGetCurrency = errors.Error("Failed to get currency")
+
+func New(provider currency.Provider) *Service {
+	return &Service{
+		currencyProvider: provider,
+	}
 }
 
-const invalidRequest = errors.Error("invalid request")
-const currencyNotSupported = errors.Error("un supported currency provided")
+func (s *Service) GetRate(ctx context.Context, req Request) (Response, error) {
+	var err error
+	var rates map[string]float32
 
-func New() *Service {
-	return &Service{}
-}
+	response := Response{}
 
-func (s *Service) GetRate(ctx context.Context, req *protos.RateRequest) (*protos.RateResponse, error) {
-	if req.GetBaseCurrency() == "" || req.GetTargetCurrency() == "" {
-		return nil, invalidRequest
+	if err = req.validate(); err != nil {
+		return response, ErrInvalidRequest.Wrap(err)
 	}
 
-	var rate string
-	var ok bool
-
-	combinationMatch := fmt.Sprintf("%s-%s", strings.ToLower(req.GetBaseCurrency()), strings.ToLower(req.GetTargetCurrency()))
-	if rate, ok = currentRate[combinationMatch]; !ok {
-		return nil, currencyNotSupported
+	if !isCurrencySupported(strings.ToUpper(req.TargetCurrency)) {
+		return response, ErrCurrencyNotSupported
 	}
 
-	return &protos.RateResponse{Rate: rate}, nil
+	if rates, err = s.currencyProvider.GetRate(ctx, req.BaseCurrency); err != nil {
+		return response, ErrAPICallFailed.Wrap(err)
+	}
+
+	if rateFromAPI, ok := rates[strings.ToUpper(req.TargetCurrency)]; ok {
+		return Response{Rate: rateFromAPI}, nil
+	}
+
+	return response, errFailedToGetCurrency
+}
+
+func isCurrencySupported(curr string) bool {
+	for _, currency := range supportedCurrencies {
+		if currency == curr {
+			return true
+		}
+	}
+
+	return false
 }
