@@ -14,4 +14,12 @@ services:
     restart: on-failure
     environment:
       CONFIG_FILE: "/go/src/github.com/mannanmcc/rateservice/config.yaml"
-     
+  mongo:
+   container_name: mongo
+   image: mongo:4.4
+   environment:
+      - MONGO_INITDB_ROOT_USERNAME=username
+      - MONGO_INITDB_ROOT_PASSWORD=password
+   ports:
+     — 27017:27017
+   command: mongod

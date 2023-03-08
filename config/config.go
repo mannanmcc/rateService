@@ -11,6 +11,7 @@ import (
 type Config struct {
 	CurrencyAPIUrl         string        `yaml:"currency_api_url"`
 	CurrencyAPIConnTimeout time.Duration `yaml:"currency_api_connection_timeout"`
+	MongoDbPort            string        `yaml:"mongodb_port"`
 }
 
 const (

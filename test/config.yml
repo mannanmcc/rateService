@@ -1,2 +1,3 @@
 currency_api_url: "http://mockserver:8080/latest"
 currency_api_connection_timeout: 2s
+mongodb_port: 27017
