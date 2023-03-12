@@ -1,2 +1,4 @@
 currency_api_url: "https://api.exchangerate.host/latest"
 currency_api_connection_timeout: 2s
+mongodb_port: 27017
+mongodb_name: "rate_service"

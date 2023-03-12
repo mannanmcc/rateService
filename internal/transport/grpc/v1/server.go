@@ -37,9 +37,9 @@ func (h *Handler) GetRate(ctx context.Context, req *protos.RateRequest) (*protos
 			logger.Print(ctx, "invalid request", zap.Error(err))
 			return transformResponse(response), status.Error(codes.InvalidArgument, err.Error())
 		}
-
+		logger.Print(ctx, "request failed to process", zap.Error(err))
 		return transformResponse(response), status.Error(codes.Internal, err.Error())
 	}
-
+	logger.Print(ctx, "request processed", zap.Error(err))
 	return transformResponse(response), nil
 }

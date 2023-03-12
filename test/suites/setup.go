@@ -21,7 +21,8 @@ func newBasicClient() (*grpc.ClientConn, error) {
 		return nil, err
 	}
 
-	defer conn.Close()
+	// do not use it as it would close the connection even before it is used
+	// defer conn.Close()
 
 	return conn, nil
 }

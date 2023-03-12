@@ -3,6 +3,9 @@
 PROJECT?=rateservice
 IMAGE_TAG?=github.com/mannanmcc/rateservice
 
+lint:
+	golangci-lint run --timeout=5m
+
 test:
 	go test -vet all ./...
 

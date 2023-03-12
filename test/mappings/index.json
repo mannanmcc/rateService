@@ -5,7 +5,7 @@
     },
     "response": {
         "status": 200,
-        "body": "{ \"test\": \"data\", \"rates\":{\"EUR\":1.10}, \"base\":\"GBP\"}",
+        "body": "{ \"test\": \"data\", \"rates\":{\"EUR\":1.40}, \"base\":\"GBP\"}",
         "headers": {
             "Content-Type": "application/json"
         }
